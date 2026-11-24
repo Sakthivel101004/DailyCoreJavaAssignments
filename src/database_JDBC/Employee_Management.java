@@ -1,16 +1,29 @@
 package database_JDBC;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+class Com_db{
+	public Connection db() {
+		Connection con=null;
+		try {
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/company_db", "root", "root");
+		} catch (SQLException e) {
+		System.out.println(e.getMessage());
+		}
+		return con;
+	}
+}
+
 public class Employee_Management {
 	Scanner scan=new Scanner(System.in);
-	Database_connection db=new Database_connection();
-        Connection con=db.conn();
+  	Com_db db=new Com_db();
+        Connection con=db.db();
         
         String create="create table employee"
         		+ " ("
@@ -24,7 +37,7 @@ public class Employee_Management {
         	try {
 				Statement st=con.createStatement();
 				st.executeUpdate(create);
-				
+				System.out.println("Table created successfully ");
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -66,7 +79,7 @@ public class Employee_Management {
 				Statement st=con.createStatement();
 				ResultSet data=st.executeQuery(select);
 				while(data.next()) {
-					System.out.println(data.getInt("emp_id") + data.getString("emp_name"));
+					System.out.println("emp_id :"+" "+data.getInt("emp_id") +" emp_name :" +" "+data.getString("emp_name"));
 				}
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
@@ -77,7 +90,7 @@ public class Employee_Management {
         	
         	Employee_Management emp=new Employee_Management();
         	emp.create();
-        //	emp.insert();
+           	emp.insert();
         	emp.select();
         }
 }
